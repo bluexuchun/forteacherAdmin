@@ -1,41 +1,60 @@
-import React, {
-  PureComponent,
-  Fragment
-} from 'react'
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom'
-import styles from './index.less'
+import ReactDOM from 'react-dom';
+import { Row, Col } from 'antd';
+import styles from './index.less';
+
+const topCol = {
+  xs: 24,
+  sm: 12,
+  md: 12,
+  lg: 12,
+  xl: 6,
+  style: { marginBottom: 24 },
+};
 
 export default class IntroCommon extends PureComponent {
   static propTypes = {
-    defaultNums: PropTypes.array
-  }
+    nums: PropTypes.array,
+  };
 
   static defaultProps = {
-    defaultNums: []
-  }
+    nums: [],
+  };
 
   constructor(props) {
-    super(props)
-    console.log(props)
+    super(props);
+    const { defaultNums } = this.props;
     this.state = {
-      defaultNums: props.defaultNums
-    }
+      nums: defaultNums,
+    };
   }
 
-  
-
   render() {
-    return ( 
-      
-      <div>
-        
-        {this.state.defaultNums.map((v, i) => 
-          ( 
-            <div key={i}> {v.id} </div>
-          )
-        )} 
-      </div>
-    )
+    const { nums } = this.state;
+
+    return (
+      <Row gutter={24}>
+        {nums.map((v, i) => (
+          <Col {...topCol}>
+            <div className={styles.introitem}>
+              {v.num}
+              <div
+                style={{
+                  width: '100%',
+                  height: '20px',
+                  lineHeight: '20px',
+                  position: 'absolute',
+                  top: '0px',
+                  left: '0px',
+                }}
+              >
+                {v.title}
+              </div>
+            </div>
+          </Col>
+        ))}
+      </Row>
+    );
   }
 }

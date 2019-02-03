@@ -19,9 +19,9 @@ module.exports = {
     'react/prop-types': 0,
     'react/forbid-prop-types': 0,
     'react/jsx-one-expression-per-line': 0,
-    'import/no-unresolved': [2, { ignore: ['^@/', '^umi/'] }],
+    'import/no-unresolved': [1, { ignore: ['^@/', '^umi/'] }],
     'import/no-extraneous-dependencies': [
-      2,
+      1,
       {
         optionalDependencies: true,
         devDependencies: ['**/tests/**.js', '/mock/**.js', '**/**.test.js'],
@@ -32,6 +32,7 @@ module.exports = {
     'jsx-a11y/no-static-element-interactions': 0,
     'jsx-a11y/anchor-is-valid': 0,
     'linebreak-style': 0,
+    'no-unused-vars': 0,
   },
   settings: {
     polyfills: ['fetch', 'promises', 'url'],

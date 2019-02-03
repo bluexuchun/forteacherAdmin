@@ -1,15 +1,13 @@
 import React, { Component, Suspense } from 'react';
 import { connect } from 'dva';
-import { Row, Col, Icon, Menu, Dropdown } from 'antd';
+import { Icon, Menu, Dropdown } from 'antd';
 
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import { getTimeDistance } from '@/utils/utils';
 
 import styles from './Analysis.less';
 import PageLoading from '@/components/PageLoading';
-import IntroCommon from '@/components/IntroCommon'
-
-const IntroduceRow = React.lazy(() => import('./IntroduceRow'));
+import IntroCommon from '@/components/IntroCommon';
 
 @connect(({ chart, loading }) => ({
   chart,
@@ -40,30 +38,37 @@ class Analysis extends Component {
     clearTimeout(this.timeoutId);
   }
 
-
-
   render() {
     const { rangePickerValue, salesType, currentTabKey } = this.state;
     const { chart, loading } = this.props;
-    const {
-      visitData,
-    } = chart;
-    const defaultNums = [{
-      id:'appointClass',
-      num:10
-    },{
-      id:'correcthomework',
-      num:10
-    },{
-      id:'correcthomework',
-      num:10
-    }]
-
+    const { visitData } = chart;
+    const defaultNums = [
+      {
+        id: 'appointClass',
+        title: '已预约课程',
+        num: 10,
+      },
+      {
+        id: 'correcthomework',
+        title: '待批改作业',
+        num: 10,
+      },
+      {
+        id: 'teachernums',
+        title: '老师数量',
+        num: 20,
+      },
+      {
+        id: 'allmoneys',
+        title: '总金额',
+        num: 3500,
+      },
+    ];
 
     return (
       <GridContent>
         <Suspense fallback={<PageLoading />}>
-          <IntroCommon  defaultNums={defaultNums} />
+          <IntroCommon defaultNums={defaultNums} />
         </Suspense>
       </GridContent>
     );
