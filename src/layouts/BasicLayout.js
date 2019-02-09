@@ -217,7 +217,7 @@ class BasicLayout extends React.Component {
             )}
           </ContainerQuery>
         </DocumentTitle>
-        <Suspense fallback={<PageLoading />}>{this.renderSettingDrawer()}</Suspense>
+        {/* <Suspense fallback={<PageLoading />}>{this.renderSettingDrawer()}</Suspense> */}
       </React.Fragment>
     );
   }

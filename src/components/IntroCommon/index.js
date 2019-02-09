@@ -1,8 +1,12 @@
 import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import { Row, Col } from 'antd';
+import { Row, Col, Icon } from 'antd';
 import styles from './index.less';
+
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1040094_lav5sdhtyoj.js',
+});
 
 const topCol = {
   xs: 24,
@@ -37,18 +41,11 @@ export default class IntroCommon extends PureComponent {
       <Row gutter={24}>
         {nums.map((v, i) => (
           <Col {...topCol}>
-            <div className={styles.introitem}>
+            <div className={styles.introitem} style={{ background: v.backgroundColor }}>
+              {v.id === 'allmoneys' ? <div style={{ fontSize: '16px' }}>￥</div> : null}
               {v.num}
-              <div
-                style={{
-                  width: '100%',
-                  height: '20px',
-                  lineHeight: '20px',
-                  position: 'absolute',
-                  top: '0px',
-                  left: '0px',
-                }}
-              >
+              <div className={styles.introbox}>
+                <IconFont style={{ fontSize: '20px', margin: '0px 8px' }} type={v.icon} />
                 {v.title}
               </div>
             </div>
