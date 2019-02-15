@@ -72,9 +72,9 @@ export default [
       },
       // list
       {
-        path: '/list',
+        path: '/teacher_list',
         name: '老师管理',
-        component: './List/TableList',
+        component: './Teacher/List',
       },
       {
         path: '/profile',

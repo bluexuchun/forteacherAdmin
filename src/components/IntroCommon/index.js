@@ -40,7 +40,7 @@ export default class IntroCommon extends PureComponent {
     return (
       <Row gutter={24}>
         {nums.map((v, i) => (
-          <Col {...topCol}>
+          <Col {...topCol} key={v.id}>
             <div className={styles.introitem} style={{ background: v.backgroundColor }}>
               {v.id === 'allmoneys' ? <div style={{ fontSize: '16px' }}>￥</div> : null}
               {v.num}
