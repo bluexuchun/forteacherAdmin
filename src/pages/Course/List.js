@@ -9,7 +9,7 @@ import IntroCommon from '@/components/IntroCommon';
 import styles from './List.less';
 
 @connect()
-class TeacherList extends Component {
+class CourseList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -123,4 +123,4 @@ class TeacherList extends Component {
   }
 }
 
-export default TeacherList;
+export default CourseList;

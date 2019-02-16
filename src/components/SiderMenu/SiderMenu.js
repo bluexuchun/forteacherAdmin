@@ -19,10 +19,7 @@ export default class SiderMenu extends PureComponent {
 
   static getDerivedStateFromProps(props, state) {
     const { pathname, flatMenuKeysLen } = state;
-    if (
-      props.location.pathname !== pathname ||
-      props.flatMenuKeys.length !== flatMenuKeysLen
-    ) {
+    if (props.location.pathname !== pathname || props.flatMenuKeys.length !== flatMenuKeysLen) {
       return {
         pathname: props.location.pathname,
         flatMenuKeysLen: props.flatMenuKeys.length,
@@ -65,7 +62,7 @@ export default class SiderMenu extends PureComponent {
         collapsed={collapsed}
         breakpoint="lg"
         onCollapse={onCollapse}
-        width={256}
+        width={180}
         theme={theme}
         className={siderClassName}
       >

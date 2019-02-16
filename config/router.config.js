@@ -70,11 +70,35 @@ export default [
           },
         ],
       },
-      // list
+      // Teacherlist
       {
         path: '/teacher_list',
         name: '老师管理',
         component: './Teacher/List',
+      },
+      // TeacherEdit
+      {
+        path: '/teacher_edit/:id',
+        name: '老师编辑',
+        component: './Teacher/Edit',
+        hideInMenu: true,
+      },
+      // CourseManage
+      {
+        path: '/course',
+        name: '课程管理',
+        routes: [
+          {
+            path: '/course/list',
+            name: '预约课程',
+            component: './Course/List',
+          },
+          {
+            path: '/course/list',
+            name: '作业批改',
+            component: './Course/List',
+          },
+        ],
       },
       {
         path: '/profile',
