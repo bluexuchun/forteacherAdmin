@@ -68,6 +68,7 @@ export default {
   // https://ant.design/docs/react/customize-theme-cn
   theme: {
     'primary-color': defaultSettings.primaryColor,
+    'menu-item-active-bg': '#eaeaea',
   },
   externals: {
     '@antv/data-set': 'DataSet',

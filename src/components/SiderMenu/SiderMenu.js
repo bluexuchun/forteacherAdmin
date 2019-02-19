@@ -1,11 +1,14 @@
 import React, { PureComponent, Suspense } from 'react';
-import { Layout } from 'antd';
+import { Layout, Icon } from 'antd';
 import classNames from 'classnames';
 import Link from 'umi/link';
 import styles from './index.less';
 import PageLoading from '../PageLoading';
 import { getDefaultCollapsedSubMenus } from './SiderMenuUtils';
 
+const IconFont = Icon.createFromIconfontCN({
+  scriptUrl: '//at.alicdn.com/t/font_1040094_lav5sdhtyoj.js',
+});
 const BaseMenu = React.lazy(() => import('./BaseMenu'));
 const { Sider } = Layout;
 
@@ -66,10 +69,31 @@ export default class SiderMenu extends PureComponent {
         theme={theme}
         className={siderClassName}
       >
-        <div className={styles.logo} id="logo">
-          <Link to="/">
-            <img src={logo} alt="logo" />
-            <h1>Ant Design Pro</h1>
+        <div
+          className={styles.logo}
+          id="logo"
+          style={{
+            textAlign: 'center',
+            paddingLeft: '0px',
+            background: '#7E4EEC',
+            color: '#FFFFFF',
+          }}
+        >
+          <Link
+            to="/"
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: '100%',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <IconFont
+              style={{ fontSize: '30px', margin: '0px 8px', color: '#FFFFFF' }}
+              type="icon-picker"
+            />
           </Link>
         </div>
         <Suspense fallback={<PageLoading />}>

@@ -1,17 +1,15 @@
 import React, { Component, Suspense } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
-import { Input, Button, Table, message, Modal } from 'antd';
+import { Input, Button, Table } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
-import styles from './List.less';
-import ApiClient from '@/utils/api';
+import styles from './AppointList.less';
 
-const confirm = Modal.confirm;
 @connect()
-class TeacherList extends Component {
+class AppointList extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,26 +36,16 @@ class TeacherList extends Component {
           key: 'action',
           width: 250,
           align: 'center',
-          render: (text, record) => {
-            return (
-              <span>
-                <a
-                  href="javascript:void(0);"
-                  onClick={() => this.editTeacher(record.id)}
-                  style={{ color: '#8856FD', marginRight: '40px' }}
-                >
-                  查看
-                </a>
-                <a
-                  href="javascript:void(0);"
-                  onClick={() => this.deleteTeacher(record.id)}
-                  style={{ color: '#F67066' }}
-                >
-                  删除
-                </a>
-              </span>
-            );
-          },
+          render: (text, record) => (
+            <span>
+              <a href="javascript:void(0);" style={{ color: '#8856FD', marginRight: '40px' }}>
+                查看
+              </a>
+              <a href="javascript:void(0);" style={{ color: '#F67066' }}>
+                删除
+              </a>
+            </span>
+          ),
         },
       ],
     };
@@ -65,53 +53,17 @@ class TeacherList extends Component {
 
   componentWillMount = () => {
     let data = [];
-    ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherList&do=teacherList', {}).then(res => {
-      let result = res.data;
-      if (result.status == 1) {
-        if (result.data.length > 0) {
-          result.data.map((v, i) => {
-            let dataItem = {
-              id: v.id,
-              name: v.teacherName,
-              age: v.age,
-            };
-            data.push(dataItem);
-          });
-        }
-        this.setState({
-          data,
-        });
-      }
-    });
-  };
+    for (let i = 0; i < 5; i += 1) {
+      let dataItem = {
+        id: i,
+        name: 'name' + i,
+        age: i + 10,
+      };
+      data.push(dataItem);
+    }
 
-  editTeacher = id => {
-    this.props.history.push('teacher_edit/' + id);
-  };
-
-  deleteTeacher = id => {
-    let _this = this;
-    confirm({
-      title: '警告',
-      content: '你确认删除该教师？',
-      onOk() {
-        ApiClient.post('/api.php?entry=sys&c=teacher&a=teacher&do=teacher_del', { id: id }).then(
-          res => {
-            let result = res.data;
-            if (result.status == 1) {
-              message.success(result.message);
-              _this.state.data.map((v, i) => {
-                if (v.id == id) {
-                  _this.data.slice(i, 1);
-                }
-              });
-            }
-          }
-        );
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
+    this.setState({
+      data,
     });
   };
 
@@ -171,4 +123,4 @@ class TeacherList extends Component {
   }
 }
 
-export default TeacherList;
+export default AppointList;
