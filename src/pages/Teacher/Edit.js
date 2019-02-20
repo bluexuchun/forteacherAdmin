@@ -41,7 +41,9 @@ class TeacherEdit extends Component {
     }
   };
 
+  // 保存信息
   submit = e => {
+    let _this = this;
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
@@ -58,6 +60,12 @@ class TeacherEdit extends Component {
             let result = res.data;
             if (result.status == 1) {
               message.success(result.message);
+              setTimeout(() => {
+                console.log('123');
+                _this.props.history.push('/teacher_list');
+              }, 1000);
+            } else {
+              message.error(result.message);
             }
           });
         }

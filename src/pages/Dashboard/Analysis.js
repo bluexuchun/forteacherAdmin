@@ -9,10 +9,7 @@ import styles from './Analysis.less';
 import PageLoading from '@/components/PageLoading';
 import IntroCommon from '@/components/IntroCommon';
 
-@connect(({ chart, loading }) => ({
-  chart,
-  loading: loading.effects['chart/fetch'],
-}))
+@connect()
 class Analysis extends Component {
   state = {
     salesType: 'all',
@@ -22,26 +19,24 @@ class Analysis extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    this.reqRef = requestAnimationFrame(() => {
-      dispatch({
-        type: 'chart/fetch',
-      });
-    });
+    // this.reqRef = requestAnimationFrame(() => {
+    //   dispatch({
+    //     type: 'chart/fetch',
+    //   });
+    // });
   }
 
   componentWillUnmount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'chart/clear',
-    });
-    cancelAnimationFrame(this.reqRef);
-    clearTimeout(this.timeoutId);
+    // dispatch({
+    //   type: 'chart/clear',
+    // });
+    // cancelAnimationFrame(this.reqRef);
+    // clearTimeout(this.timeoutId);
   }
 
   render() {
     const { rangePickerValue, salesType, currentTabKey } = this.state;
-    const { chart, loading } = this.props;
-    const { visitData } = chart;
     const defaultNums = [
       {
         id: 'appointClass',

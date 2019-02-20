@@ -1,18 +1,21 @@
 import React, { Component, Suspense } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
-import { Input, Button, Table } from 'antd';
+import { Input, Button, Table, message, Modal } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
-import styles from './List.less';
+import styles from './AppointList.less';
+import ApiClient from '@/utils/api';
 
+const confirm = Modal.confirm;
 @connect()
 class CourseList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isClicked: 'appoint',
       columns: [
         {
           title: '序号',
@@ -27,7 +30,7 @@ class CourseList extends Component {
           width: 200,
         },
         {
-          title: '年龄',
+          title: '时间',
           dataIndex: 'age',
           key: 'age',
         },
@@ -36,16 +39,19 @@ class CourseList extends Component {
           key: 'action',
           width: 250,
           align: 'center',
-          render: (text, record) => (
-            <span>
-              <a href="javascript:void(0);" style={{ color: '#8856FD', marginRight: '40px' }}>
-                查看
-              </a>
-              <a href="javascript:void(0);" style={{ color: '#F67066' }}>
-                删除
-              </a>
-            </span>
-          ),
+          render: (text, record) => {
+            return (
+              <span>
+                <a
+                  href="javascript:void(0);"
+                  onClick={() => this.editTeacher(record.id)}
+                  style={{ color: '#8856FD', marginRight: '40px' }}
+                >
+                  查看
+                </a>
+              </span>
+            );
+          },
         },
       ],
     };
@@ -53,17 +59,60 @@ class CourseList extends Component {
 
   componentWillMount = () => {
     let data = [];
-    for (let i = 0; i < 5; i += 1) {
-      let dataItem = {
-        id: i,
-        name: 'name' + i,
-        age: i + 10,
-      };
-      data.push(dataItem);
-    }
+    ApiClient.post('/api.php?entry=sys&c=teacher&a=curriculum&do=subscribe', {}).then(res => {
+      let result = res.data;
+      console.log(result);
+      // if (result.status == 1) {
+      //   if (result.data.length > 0) {
+      //     result.data.map((v, i) => {
+      //       let dataItem = {
+      //         id: v.id,
+      //         name: v.teacherName,
+      //         age: v.age,
+      //       };
+      //       data.push(dataItem);
+      //     });
+      //   }
+      //   this.setState({
+      //     data,
+      //   });
+      // }
+    });
+  };
 
+  editTeacher = id => {
+    this.props.history.push('teacher_edit/' + id);
+  };
+
+  changeType = type => {
     this.setState({
-      data,
+      isClicked: type,
+    });
+  };
+
+  deleteTeacher = id => {
+    let _this = this;
+    confirm({
+      title: '警告',
+      content: '你确认删除该教师？',
+      onOk() {
+        ApiClient.post('/api.php?entry=sys&c=teacher&a=teacher&do=teacher_del', { id: id }).then(
+          res => {
+            let result = res.data;
+            if (result.status == 1) {
+              message.success(result.message);
+              _this.state.data.map((v, i) => {
+                if (v.id == id) {
+                  _this.data.slice(i, 1);
+                }
+              });
+            }
+          }
+        );
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
     });
   };
 
@@ -111,9 +160,23 @@ class CourseList extends Component {
           <IntroCommon defaultNums={defaultNums} />
 
           {/* 新增按钮 */}
-          <Button className={styles.addbtn} onClick={() => this.addTeacher()}>
-            +新增老师
-          </Button>
+          <div className="btnGroup">
+            <Button
+              className={`${
+                this.state.isClicked == 'appoint' ? styles.addbtnactive : styles.addbtn
+              }`}
+              onClick={() => this.changeType('appoint')}
+            >
+              待批改作业
+            </Button>
+            <Button
+              className={`${this.state.isClicked == 'end' ? styles.addbtnactive : styles.addbtn}`}
+              style={{ marginLeft: '15px' }}
+              onClick={() => this.changeType('end')}
+            >
+              已批改作业
+            </Button>
+          </div>
 
           {/* 表格 */}
           <Table columns={this.state.columns} dataSource={this.state.data} />
