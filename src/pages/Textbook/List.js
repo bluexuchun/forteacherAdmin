@@ -6,16 +6,15 @@ import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
-import styles from './AppointList.less';
+import styles from './List.less';
 import ApiClient from '@/utils/api';
 
 const confirm = Modal.confirm;
 @connect()
-class CourseList extends Component {
+class TextbookList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isClicked: 'appoint',
       columns: [
         {
           title: '序号',
@@ -30,7 +29,7 @@ class CourseList extends Component {
           width: 200,
         },
         {
-          title: '时间',
+          title: '年龄',
           dataIndex: 'age',
           key: 'age',
         },
@@ -49,6 +48,13 @@ class CourseList extends Component {
                 >
                   查看
                 </a>
+                <a
+                  href="javascript:void(0);"
+                  onClick={() => this.deleteTeacher(record.id)}
+                  style={{ color: '#F67066' }}
+                >
+                  删除
+                </a>
               </span>
             );
           },
@@ -59,35 +65,28 @@ class CourseList extends Component {
 
   componentWillMount = () => {
     let data = [];
-    ApiClient.post('/api.php?entry=sys&c=teacher&a=curriculum&do=subscribe', {}).then(res => {
+    ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherList&do=teacherList', {}).then(res => {
       let result = res.data;
-      console.log(result);
-      // if (result.status == 1) {
-      //   if (result.data.length > 0) {
-      //     result.data.map((v, i) => {
-      //       let dataItem = {
-      //         id: v.id,
-      //         name: v.teacherName,
-      //         age: v.age,
-      //       };
-      //       data.push(dataItem);
-      //     });
-      //   }
-      //   this.setState({
-      //     data,
-      //   });
-      // }
+      if (result.status == 1) {
+        if (result.data.length > 0) {
+          result.data.map((v, i) => {
+            let dataItem = {
+              id: v.id,
+              name: v.teacherName,
+              age: v.age,
+            };
+            data.push(dataItem);
+          });
+        }
+        this.setState({
+          data,
+        });
+      }
     });
   };
 
   editTeacher = id => {
     this.props.history.push('teacher_edit/' + id);
-  };
-
-  changeType = type => {
-    this.setState({
-      isClicked: type,
-    });
   };
 
   deleteTeacher = id => {
@@ -116,8 +115,8 @@ class CourseList extends Component {
     });
   };
 
-  addTeacher = () => {
-    this.props.history.push('teacher_edit/0');
+  addTextbook = () => {
+    this.props.history.push('textbook_edit/0');
   };
 
   render() {
@@ -160,23 +159,9 @@ class CourseList extends Component {
           <IntroCommon defaultNums={defaultNums} />
 
           {/* 新增按钮 */}
-          <div className="btnGroup">
-            <Button
-              className={`${
-                this.state.isClicked == 'appoint' ? styles.addbtnactive : styles.addbtn
-              }`}
-              onClick={() => this.changeType('appoint')}
-            >
-              待批改作业
-            </Button>
-            <Button
-              className={`${this.state.isClicked == 'end' ? styles.addbtnactive : styles.addbtn}`}
-              style={{ marginLeft: '15px' }}
-              onClick={() => this.changeType('end')}
-            >
-              已批改作业
-            </Button>
-          </div>
+          <Button className={styles.addbtn} onClick={() => this.addTextbook()}>
+            +教科书
+          </Button>
 
           {/* 表格 */}
           <Table columns={this.state.columns} dataSource={this.state.data} />
@@ -186,4 +171,4 @@ class CourseList extends Component {
   }
 }
 
-export default CourseList;
+export default TextbookList;

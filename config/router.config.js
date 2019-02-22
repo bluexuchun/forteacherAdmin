@@ -45,14 +45,25 @@ export default [
           {
             path: '/course/appointlist',
             name: '预约课程',
-            component: './Course/AppointList',
+            component: './Course/AppointCourse/AppointList',
           },
           {
             path: '/course/list',
             name: '作业批改',
-            component: './Course/List',
+            component: './Course/NormalCourse/List',
           },
         ],
+      },
+      {
+        path: '/textbook_list',
+        name: '教科书管理',
+        component: './Textbook/List',
+      },
+      {
+        path: '/textbook_edit/:id',
+        name: '教科书编辑',
+        component: './Textbook/Edit',
+        hideInMenu:true
       },
       // {
       //   name: 'account',

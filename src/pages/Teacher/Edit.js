@@ -140,7 +140,7 @@ class TeacherEdit extends Component {
       <GridContent>
         <Suspense fallback={<PageLoading />}>
           <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={4} style={{ textAlign: 'center' }}>
+            <Col span={6} style={{ textAlign: 'center' }}>
               <Upload
                 name="file"
                 listType="picture"
@@ -196,7 +196,7 @@ class TeacherEdit extends Component {
           </Row>
           <div className={styles.line} />
           <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={4} style={{ textAlign: 'center' }} />
+            <Col span={6} style={{ textAlign: 'center' }} />
             <Col span={14}>
               <div className={styles.tabTitle}>联系方式</div>
               <Form onSubmit={this.submit}>

@@ -6,12 +6,12 @@ import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
-import styles from './AppointEdit.less';
+import styles from './Edit.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
 @connect()
-class AppointEdit extends Component {
+class CourseEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -66,7 +66,7 @@ class AppointEdit extends Component {
       <GridContent>
         <Suspense fallback={<PageLoading />}>
           <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={4} style={{ textAlign: 'center' }}>
+            <Col span={6} style={{ textAlign: 'center' }}>
               <Avatar size={120} icon="user" />
             </Col>
             <Col span={14}>
@@ -89,7 +89,7 @@ class AppointEdit extends Component {
           </Row>
           <div className={styles.line} />
           <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={4} style={{ textAlign: 'center' }} />
+            <Col span={6} style={{ textAlign: 'center' }} />
             <Col span={14}>
               <div className={styles.tabTitle}>联系方式</div>
               <Form onSubmit={this.submit}>
@@ -116,6 +116,6 @@ class AppointEdit extends Component {
   }
 }
 
-const newAppointEdit = Form.create()(AppointEdit);
+const newCourseEdit = Form.create()(CourseEdit);
 
-export default newAppointEdit;
+export default newCourseEdit;
