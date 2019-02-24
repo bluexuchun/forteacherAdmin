@@ -19,24 +19,22 @@ class TextbookEdit extends Component {
     this.state = {
       icon: '',
       addUrl: '/api.php?entry=sys&c=material&a=material&do=material',
+      editUrl: '/api.php?entry=sys&c=material&a=material&do=material_edit',
     };
   }
   componentWillMount = () => {
     let _this = this;
     let id = this.props.match.params.id;
     if (id != 0) {
-      ApiClient.post('/api.php?entry=sys&c=material&a=material&do=material_edit', { id: id }).then(
-        res => {
-          let result = res.data;
-          if (result.status == 1) {
-            _this.setState({
-              ...result.data,
-              icon: result.data.icon,
-              addUrl: '/api.php?entry=sys&c=teacher&a=teacher&do=teacher_update',
-            });
-          }
+      ApiClient.post(this.state.editUrl, { id: id }).then(res => {
+        let result = res.data;
+        if (result.status == 1) {
+          _this.setState({
+            ...result.data,
+            icon: result.data.icon,
+          });
         }
-      );
+      });
     }
   };
 
@@ -55,19 +53,17 @@ class TextbookEdit extends Component {
           } else {
             data = { icon: this.state.icon, ...values };
           }
-          console.log(data)
-          // ApiClient.post(this.state.addUrl, data).then(res => {
-          //   let result = res.data;
-          //   if (result.status == 1) {
-          //     message.success(result.message);
-          //     setTimeout(() => {
-          //       console.log('123');
-          //       _this.props.history.push('/teacher_list');
-          //     }, 1000);
-          //   } else {
-          //     message.error(result.message);
-          //   }
-          // });
+          ApiClient.post(this.state.addUrl, data).then(res => {
+            let result = res.data;
+            if (result.status == 1) {
+              message.success(result.message);
+              setTimeout(() => {
+                _this.props.history.push('/textbook_list');
+              }, 1000);
+            } else {
+              message.error(result.message);
+            }
+          });
         }
       }
     });
@@ -165,12 +161,12 @@ class TextbookEdit extends Component {
                     initialValue: this.state.title,
                   })(<Input placeholder="请输入名称" />)}
                 </FormItem>
-                {/* <FormItem {...formItemSmallLayout} label="适用年级：">
-                  {getFieldDecorator('adapt', {
+                <FormItem {...formItemSmallLayout} label="适用年级：">
+                  {getFieldDecorator('grade', {
                     rules: [{ required: true, message: '请输入适用年级!' }],
-                    initialValue: this.state.adapt,
+                    initialValue: this.state.grade,
                   })(<Input placeholder="请输入适用年级" />)}
-                </FormItem> */}
+                </FormItem>
                 <FormItem {...formItemSmallLayout} label="适应人群：">
                   {getFieldDecorator('adapt', {
                     rules: [{ required: true, message: '请输入适应人群!' }],

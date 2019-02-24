@@ -69,45 +69,57 @@ class AppointEdit extends Component {
             <Col span={6} style={{ textAlign: 'center' }}>
               <Avatar size={120} icon="user" />
             </Col>
-            <Col span={14}>
+            <Col span={6}>
               <div className={styles.tabTitle}>个人基本信息</div>
-              <Form onSubmit={this.submit}>
-                <FormItem {...formItemSmallLayout} label="姓名：">
-                  <Input placeholder="请输入教师姓名" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="年龄：">
-                  <Input placeholder="请输入教师年龄" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="学历：">
-                  <Input placeholder="请输入教师学历" />
-                </FormItem>
-                <FormItem {...formDefaultLayout} label="简介：">
-                  <TextArea placeholder="教师简介" />
-                </FormItem>
-              </Form>
+              <div className={styles.inputGroup}>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>姓名：</div>
+                  <div className={styles.itemInput}>我是姓名</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>年龄：</div>
+                  <div className={styles.itemInput}>12</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>课程进度：</div>
+                  <div className={styles.itemInput}>Page7</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>课程时间：</div>
+                  <div className={styles.itemInput}>2018-12-19 8:30</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>教材名称：</div>
+                  <div className={styles.itemInput}>
+                    <Button type="primary">下载材料</Button>
+                  </div>
+                </div>
+              </div>
             </Col>
           </Row>
           <div className={styles.line} />
           <Row gutter={12} style={{ padding: '20px 0px' }}>
             <Col span={6} style={{ textAlign: 'center' }} />
-            <Col span={14}>
-              <div className={styles.tabTitle}>联系方式</div>
-              <Form onSubmit={this.submit}>
-                <FormItem {...formItemSmallLayout} label="手机号：">
-                  <Input placeholder="请输入手机号" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="Facebook：">
-                  <Input placeholder="请输入Facebook" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="Skype：">
-                  <Input placeholder="请输入Skype" />
-                </FormItem>
-                <FormItem {...tailFormItemLayout}>
-                  <Button className={styles.addbtn} htmlType="submit">
-                    提交
-                  </Button>
-                </FormItem>
-              </Form>
+            <Col span={6}>
+              <div className={styles.tabTitle}>个人习惯</div>
+              <div className={styles.inputGroup}>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>需要加强部分：</div>
+                  <div className={styles.itemInput}>口语</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>课前闲聊12：</div>
+                  <div className={styles.itemInput}>是</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>纠错方式：</div>
+                  <div className={styles.itemInput}>立即纠错</div>
+                </div>
+                <div className={styles.inputItem}>
+                  <div className={styles.itemLabel}>每日话题：</div>
+                  <div className={styles.itemInput}>需要</div>
+                </div>
+              </div>
             </Col>
           </Row>
         </Suspense>

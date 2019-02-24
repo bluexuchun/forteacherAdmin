@@ -23,15 +23,29 @@ class TextbookList extends Component {
           width: 180,
         },
         {
-          title: '姓名',
-          dataIndex: 'name',
-          key: 'name',
+          title: '名称',
+          dataIndex: 'title',
+          key: 'title',
           width: 200,
         },
         {
-          title: '年龄',
-          dataIndex: 'age',
-          key: 'age',
+          title: '课时',
+          width: 200,
+          render: (text, record) => {
+            return <span>{record.study}课时</span>;
+          },
+        },
+        {
+          title: '封面图',
+          width: 200,
+          render: (text, record) => {
+            return (
+              <img
+                style={{ width: '80px', height: '100px', objectFit: 'cover' }}
+                src={record.icon}
+              />
+            );
+          },
         },
         {
           title: '操作',
@@ -43,14 +57,14 @@ class TextbookList extends Component {
               <span>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => this.editTeacher(record.id)}
+                  onClick={() => this.editTextbook(record.id)}
                   style={{ color: '#8856FD', marginRight: '40px' }}
                 >
-                  查看
+                  编辑
                 </a>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => this.deleteTeacher(record.id)}
+                  onClick={() => this.deleteTextbook(record.id)}
                   style={{ color: '#F67066' }}
                 >
                   删除
@@ -64,16 +78,22 @@ class TextbookList extends Component {
   }
 
   componentWillMount = () => {
+    this.init();
+  };
+
+  init = () => {
     let data = [];
-    ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherList&do=teacherList', {}).then(res => {
+    ApiClient.post('api.php?entry=sys&c=material&a=material&do=material_display', {}).then(res => {
       let result = res.data;
+
       if (result.status == 1) {
         if (result.data.length > 0) {
           result.data.map((v, i) => {
             let dataItem = {
               id: v.id,
-              name: v.teacherName,
-              age: v.age,
+              title: v.title,
+              study: v.study,
+              icon: v.icon,
             };
             data.push(dataItem);
           });
@@ -85,26 +105,22 @@ class TextbookList extends Component {
     });
   };
 
-  editTeacher = id => {
-    this.props.history.push('teacher_edit/' + id);
+  editTextbook = id => {
+    this.props.history.push('textbook_edit/' + id);
   };
 
-  deleteTeacher = id => {
+  deleteTextbook = id => {
     let _this = this;
     confirm({
       title: '警告',
-      content: '你确认删除该教师？',
+      content: '你确认删除该教科书？',
       onOk() {
-        ApiClient.post('/api.php?entry=sys&c=teacher&a=teacher&do=teacher_del', { id: id }).then(
+        ApiClient.post('/api.php?entry=sys&c=material&a=material&do=material_del', { id: id }).then(
           res => {
             let result = res.data;
             if (result.status == 1) {
               message.success(result.message);
-              _this.state.data.map((v, i) => {
-                if (v.id == id) {
-                  _this.data.slice(i, 1);
-                }
-              });
+              _this.init();
             }
           }
         );

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Row, Col, Icon } from 'antd';
 import styles from './index.less';
+import Link from 'umi/link';
 
 const IconFont = Icon.createFromIconfontCN({
   scriptUrl: '//at.alicdn.com/t/font_1040094_lav5sdhtyoj.js',
@@ -48,6 +49,21 @@ export default class IntroCommon extends PureComponent {
                 <IconFont style={{ fontSize: '20px', margin: '0px 8px' }} type={v.icon} />
                 {v.title}
               </div>
+              {v.id === 'allmoneys' ? (
+                <Link
+                  to="/textbook_list"
+                  style={{
+                    position: 'absolute',
+                    bottom: '5px',
+                    right: '8px',
+                    fontSize: '13px',
+                    color: '#fff',
+                    fontWeight: 'normal',
+                  }}
+                >
+                  去体现 >
+                </Link>
+              ) : null}
             </div>
           </Col>
         ))}

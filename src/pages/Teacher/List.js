@@ -39,24 +39,8 @@ class TeacherList extends Component {
           width: 250,
           align: 'center',
           render: (text, record) => {
-            return (
-              <span>
-                <a
-                  href="javascript:void(0);"
-                  onClick={() => this.editTeacher(record.id)}
-                  style={{ color: '#8856FD', marginRight: '40px' }}
-                >
-                  查看
-                </a>
-                <a
-                  href="javascript:void(0);"
-                  onClick={() => this.deleteTeacher(record.id)}
-                  style={{ color: '#F67066' }}
-                >
-                  删除
-                </a>
-              </span>
-            );
+            console.log(record);
+            return <img src="" alt="" />;
           },
         },
       ],
@@ -64,6 +48,10 @@ class TeacherList extends Component {
   }
 
   componentWillMount = () => {
+    this.init();
+  };
+
+  init = () => {
     let data = [];
     ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherList&do=teacherList', {}).then(res => {
       let result = res.data;
@@ -100,11 +88,7 @@ class TeacherList extends Component {
             let result = res.data;
             if (result.status == 1) {
               message.success(result.message);
-              _this.state.data.map((v, i) => {
-                if (v.id == id) {
-                  _this.data.slice(i, 1);
-                }
-              });
+              _this.init();
             }
           }
         );

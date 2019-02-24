@@ -48,9 +48,21 @@ export default [
             component: './Course/AppointCourse/AppointList',
           },
           {
+            path: '/course/appointedit/:id',
+            name: '查看课程',
+            component: './Course/AppointCourse/AppointEdit',
+            hideInMenu: true,
+          },
+          {
             path: '/course/list',
             name: '作业批改',
             component: './Course/NormalCourse/List',
+          },
+          {
+            path: '/course/edit/:id',
+            name: '作业编辑',
+            component: './Course/NormalCourse/Edit',
+            hideInMenu: true,
           },
         ],
       },
@@ -63,7 +75,7 @@ export default [
         path: '/textbook_edit/:id',
         name: '教科书编辑',
         component: './Textbook/Edit',
-        hideInMenu:true
+        hideInMenu: true,
       },
       // {
       //   name: 'account',

@@ -8,6 +8,8 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
 import styles from './AppointList.less';
 import ApiClient from '@/utils/api';
+import Finish from '@/assets/finish.png';
+import Absence from '@/assets/absence.png';
 
 const confirm = Modal.confirm;
 @connect()
@@ -16,7 +18,32 @@ class AppointList extends Component {
     super(props);
     this.state = {
       isClicked: 'appoint',
-      columns: [
+    };
+  }
+
+  componentWillMount = () => {
+    this.changeData(this.state.isClicked);
+  };
+
+  editAppoint = id => {
+    this.props.history.push('/course/appointedit/' + id);
+  };
+
+  changeType = type => {
+    this.setState({
+      isClicked: type,
+    });
+    this.changeData(type);
+  };
+
+  /**
+   * 统一方法 分为已预约课程 or 已结束课程
+   */
+  changeData = type => {
+    let columns, data;
+    if (type == 'appoint') {
+      // 已预约课程
+      (columns = [
         {
           title: '序号',
           dataIndex: 'id',
@@ -25,34 +52,34 @@ class AppointList extends Component {
         },
         {
           title: '交易号',
-          dataIndex: 'name',
-          key: 'name',
+          dataIndex: 'orderid',
+          key: 'orderid',
           width: 200,
         },
         {
           title: '姓名',
-          dataIndex: 'age',
-          key: 'age',
+          dataIndex: 'name',
+          key: 'name',
         },
         {
           title: '开课时间',
-          dataIndex: 'age',
-          key: 'age',
+          dataIndex: 'starttime',
+          key: 'starttime',
         },
         {
           title: '时间',
-          dataIndex: 'age',
-          key: 'age',
+          dataIndex: 'time',
+          key: 'time',
         },
         {
           title: '时长',
-          dataIndex: 'age',
-          key: 'age',
+          dataIndex: 'duration',
+          key: 'duration',
         },
         {
           title: '课程进度',
-          dataIndex: 'age',
-          key: 'age',
+          dataIndex: 'classStatus',
+          key: 'classStatus',
         },
         {
           title: '操作',
@@ -64,8 +91,8 @@ class AppointList extends Component {
               <span>
                 <a
                   href="javascript:void(0);"
-                  onClick={() => this.editTeacher(record.id)}
-                  style={{ color: '#8856FD', marginRight: '40px' }}
+                  onClick={() => this.editAppoint(record.id)}
+                  style={{ color: '#8856FD' }}
                 >
                   查看
                 </a>
@@ -73,70 +100,152 @@ class AppointList extends Component {
             );
           },
         },
-      ],
-    };
-  }
+      ]),
+        (data = [
+          {
+            id: 1,
+            orderid: 'KJ20181218201812W7QE',
+            name: 'XINGING',
+            starttime: '2019-2-24',
+            time: '13:00',
+            duration: '120',
+            classStatus: 'Page7',
+          },
+          {
+            id: 2,
+            orderid: 'KJ20181218201812W7QE',
+            name: 'XINGING',
+            starttime: '2019-2-24',
+            time: '13:00',
+            duration: '120',
+            classStatus: 'Page7',
+          },
+        ]);
 
-  componentWillMount = () => {
-    let data = [];
-    ApiClient.post('/api.php?entry=sys&c=teacher&a=curriculum&do=subscribe', {}).then(res => {
-      let result = res.data;
-      console.log(result);
-      // if (result.status == 1) {
-      //   if (result.data.length > 0) {
-      //     result.data.map((v, i) => {
-      //       let dataItem = {
-      //         id: v.id,
-      //         name: v.teacherName,
-      //         age: v.age,
-      //       };
-      //       data.push(dataItem);
+      // ApiClient.post('/api.php?entry=sys&c=teacher&a=curriculum&do=subscribe', {}).then(res => {
+      //   let result = res.data;
+      //   console.log(result);
+      //   if (result.status == 1) {
+      //     if (result.data.length > 0) {
+      //       result.data.map((v, i) => {
+      //         let dataItem = {
+      //           id: v.id,
+      //           name: v.teacherName,
+      //           age: v.age,
+      //         };
+      //         data.push(dataItem);
+      //       });
+      //     }
+      //     this.setState({
+      //       data,
       //     });
       //   }
-      //   this.setState({
-      //     data,
-      //   });
-      // }
-    });
-  };
+      // });
+    } else {
+      // 已结束课程
+      (columns = [
+        {
+          title: '序号',
+          dataIndex: 'id',
+          key: 'id',
+          width: 180,
+        },
+        {
+          title: '交易号',
+          dataIndex: 'orderid',
+          key: 'orderid',
+          width: 200,
+        },
+        {
+          title: '姓名',
+          dataIndex: 'name',
+          key: 'name',
+        },
+        {
+          title: '开课时间',
+          dataIndex: 'starttime',
+          key: 'starttime',
+        },
+        {
+          title: '时间',
+          dataIndex: 'time',
+          key: 'time',
+        },
+        {
+          title: '时长',
+          dataIndex: 'duration',
+          key: 'duration',
+        },
+        {
+          title: '课程进度',
+          dataIndex: 'classStatus',
+          key: 'classStatus',
+        },
+        {
+          title: '缺勤/完成',
+          key: 'action',
+          width: 250,
+          align: 'center',
+          render: (text, record) => {
+            console.log(record);
+            return (
+              <span>
+                {record.status == 1 ? (
+                  <img className={styles.icon} src={Finish} />
+                ) : (
+                  <img className={styles.icon} src={Absence} />
+                )}
+              </span>
+            );
+          },
+        },
+      ]),
+        (data = [
+          {
+            id: 1,
+            orderid: 'KJ20181218201812W7QE',
+            name: 'XINGING',
+            starttime: '2019-2-24',
+            time: '13:00',
+            duration: '120',
+            classStatus: '结课',
+            status: 1,
+          },
+          {
+            id: 2,
+            orderid: 'KJ20181218201812W7QE',
+            name: 'XINGING',
+            starttime: '2019-2-24',
+            time: '13:00',
+            duration: '120',
+            classStatus: '结课',
+            status: 2,
+          },
+        ]);
 
-  editTeacher = id => {
-    this.props.history.push('teacher_edit/' + id);
-  };
-
-  deleteTeacher = id => {
-    let _this = this;
-    confirm({
-      title: '警告',
-      content: '你确认删除该教师？',
-      onOk() {
-        ApiClient.post('/api.php?entry=sys&c=teacher&a=teacher&do=teacher_del', { id: id }).then(
-          res => {
-            let result = res.data;
-            if (result.status == 1) {
-              message.success(result.message);
-              _this.state.data.map((v, i) => {
-                if (v.id == id) {
-                  _this.data.slice(i, 1);
-                }
-              });
-            }
-          }
-        );
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  };
-
-  addTeacher = () => {
-    this.props.history.push('teacher_edit/0');
-  };
-
-  changeType = type => {
+      // ApiClient.post('/api.php?entry=sys&c=teacher&a=curriculum&do=subscribe', {}).then(res => {
+      //   let result = res.data;
+      //   console.log(result);
+      //   if (result.status == 1) {
+      //     if (result.data.length > 0) {
+      //       result.data.map((v, i) => {
+      //         let dataItem = {
+      //           id: v.id,
+      //           name: v.teacherName,
+      //           age: v.age,
+      //         };
+      //         data.push(dataItem);
+      //       });
+      //     }
+      //     this.setState({
+      //       data,
+      //     });
+      //   }
+      // });
+    }
     this.setState({
-      isClicked: type,
+      columns,
+      data,
     });
   };
 

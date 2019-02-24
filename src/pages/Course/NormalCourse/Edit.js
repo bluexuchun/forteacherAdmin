@@ -7,6 +7,10 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
 import styles from './Edit.less';
+// 引入编辑器组件
+import BraftEditor from 'braft-editor';
+// 引入编辑器样式
+import 'braft-editor/dist/index.css';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -14,13 +18,36 @@ const { TextArea } = Input;
 class CourseEdit extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      // 创建一个空的editorState作为初始值
+      editorState: BraftEditor.createEditorState(null),
+    };
   }
 
-  componentWillMount = () => {};
+  componentWillMount = () => {
+    const htmlContent = '<p>123123</p>';
+    // 使用BraftEditor.createEditorState将html字符串转换为编辑器需要的editorStat
+    this.setState({
+      editorState: BraftEditor.createEditorState(htmlContent),
+    });
+  };
+
+  submitContent = async () => {
+    // 在编辑器获得焦点时按下ctrl+s会执行此方法
+    // 编辑器内容提交到服务端之前，可直接调用editorState.toHTML()来获取HTML格式的内容
+    const htmlContent = this.state.editorState.toHTML();
+    console.log(htmlContent);
+    // const result = await saveEditorContent(htmlContent)
+  };
+
+  handleEditorChange = editorState => {
+    this.setState({ editorState });
+  };
 
   render() {
     const { match, children, location } = this.props;
+
+    const { editorState } = this.state;
 
     const formItemSmallLayout = {
       labelCol: {
@@ -62,52 +89,93 @@ class CourseEdit extends Component {
         },
       },
     };
+
+    let controls = ['font-size', 'text-color', 'bold'];
+
+    const defaultNums = [
+      {
+        id: 'appointClass',
+        title: '已预约课程',
+        num: 10,
+        backgroundColor: '#36DF97',
+        icon: 'icon-appoint',
+      },
+      {
+        id: 'correcthomework',
+        title: '待批改作业',
+        num: 10,
+        backgroundColor: '#F6883D',
+        icon: 'icon-book',
+      },
+      {
+        id: 'teachernums',
+        title: '老师数量',
+        num: 20,
+        backgroundColor: '#41AFEE',
+        icon: 'icon-people',
+      },
+      {
+        id: 'allmoneys',
+        title: '总金额',
+        num: 3500,
+        backgroundColor: '#7E4EEC',
+        icon: 'icon-money',
+      },
+    ];
+
     return (
       <GridContent>
         <Suspense fallback={<PageLoading />}>
-          <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={6} style={{ textAlign: 'center' }}>
-              <Avatar size={120} icon="user" />
+          {/* 统计 */}
+          <IntroCommon defaultNums={defaultNums} />
+
+          <div className={styles.tit}>待批改作业>作业编辑</div>
+          <Row
+            type="flex"
+            justify="space-between"
+            style={{ padding: '0px 0px', background: '#FBFBFB' }}
+          >
+            <Col
+              span={11}
+              style={{ textAlign: 'center', boxSizing: 'border-box', padding: '10px' }}
+            >
+              <TextArea rows={19} />
             </Col>
-            <Col span={14}>
-              <div className={styles.tabTitle}>个人基本信息</div>
-              <Form onSubmit={this.submit}>
-                <FormItem {...formItemSmallLayout} label="姓名：">
-                  <Input placeholder="请输入教师姓名" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="年龄：">
-                  <Input placeholder="请输入教师年龄" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="学历：">
-                  <Input placeholder="请输入教师学历" />
-                </FormItem>
-                <FormItem {...formDefaultLayout} label="简介：">
-                  <TextArea placeholder="教师简介" />
-                </FormItem>
-              </Form>
-            </Col>
-          </Row>
-          <div className={styles.line} />
-          <Row gutter={12} style={{ padding: '20px 0px' }}>
-            <Col span={6} style={{ textAlign: 'center' }} />
-            <Col span={14}>
-              <div className={styles.tabTitle}>联系方式</div>
-              <Form onSubmit={this.submit}>
-                <FormItem {...formItemSmallLayout} label="手机号：">
-                  <Input placeholder="请输入手机号" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="Facebook：">
-                  <Input placeholder="请输入Facebook" />
-                </FormItem>
-                <FormItem {...formItemSmallLayout} label="Skype：">
-                  <Input placeholder="请输入Skype" />
-                </FormItem>
-                <FormItem {...tailFormItemLayout}>
-                  <Button className={styles.addbtn} htmlType="submit">
-                    提交
-                  </Button>
-                </FormItem>
-              </Form>
+            <Col
+              span={11}
+              style={{
+                textAlign: 'center',
+                boxSizing: 'border-box',
+                padding: '10px 10px 60px 10px',
+              }}
+            >
+              <BraftEditor
+                value={editorState}
+                onChange={this.handleEditorChange}
+                onSave={this.submitContent}
+                controls={controls}
+                contentStyle={{ height: '300px' }}
+                style={{
+                  background: '#fff',
+                  boxSizing: 'border-box',
+                  padding: '6px 8px',
+                  borderRadius: '8px',
+                  border: '1px solid #eaeaea',
+                }}
+              />
+              <div
+                style={{
+                  width: '100%',
+                  marginTop: '10px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                }}
+              >
+                <Button className={styles.addbtn} htmlType="submit">
+                  提交
+                </Button>
+              </div>
             </Col>
           </Row>
         </Suspense>
