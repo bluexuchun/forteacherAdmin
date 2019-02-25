@@ -67,6 +67,12 @@ export default [
         ],
       },
       {
+        path:'/arrange',
+        name:'开放时间',
+        component: './Arrange/index',
+        hideInMenu:true
+      },
+      {
         path: '/textbook_list',
         name: '教科书管理',
         component: './Textbook/List',

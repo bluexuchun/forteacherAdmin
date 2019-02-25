@@ -15,6 +15,8 @@ class TeacherList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectedRowKeys: [],
+      loading: true,
       columns: [
         {
           title: '序号',
@@ -34,13 +36,39 @@ class TeacherList extends Component {
           key: 'age',
         },
         {
+          title:'开放时间',
+          width: 250,
+          align: 'center',
+          render:(text,record) => {
+            return (
+              <Button type="primary" onClick={() => this.arrange(record.id)}>添加开放时间</Button>
+            )
+          }
+        },
+        {
           title: '操作',
           key: 'action',
           width: 250,
           align: 'center',
           render: (text, record) => {
-            console.log(record);
-            return <img src="" alt="" />;
+            return(
+              <span>
+                <a
+                  href="javascript:void(0);"
+                  onClick={() => this.editTeacher(record.id)}
+                  style={{ color: '#8856FD', marginRight: '40px' }}
+                >
+                  编辑
+                </a>
+                <a
+                  href="javascript:void(0);"
+                  onClick={() => this.deleteTeacher(record.id)}
+                  style={{ color: '#F67066' }}
+                >
+                  删除
+                </a>
+            </span>
+            )
           },
         },
       ],
@@ -68,9 +96,26 @@ class TeacherList extends Component {
         }
         this.setState({
           data,
+          loading:false
         });
       }
     });
+  };
+
+  arrange = id => {
+    let item = [1,2,3]
+    const { history } = this.props
+    history.push({
+      pathname:'arrange/',
+      state:{
+        id:JSON.stringify(item)
+      }
+    })
+    // this.props.history.push('arrange/' + JSON.stringify(item));
+  }
+
+  addTeacher = () => {
+    this.props.history.push('teacher_edit/0');
   };
 
   editTeacher = id => {
@@ -99,56 +144,40 @@ class TeacherList extends Component {
     });
   };
 
-  addTeacher = () => {
-    this.props.history.push('teacher_edit/0');
-  };
+  onSelectChange = (selectedRowKeys) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys });
+  }
 
   render() {
     const { match, children, location } = this.props;
-    const defaultNums = [
-      {
-        id: 'appointClass',
-        title: '已预约课程',
-        num: 10,
-        backgroundColor: '#36DF97',
-        icon: 'icon-appoint',
-      },
-      {
-        id: 'correcthomework',
-        title: '待批改作业',
-        num: 10,
-        backgroundColor: '#F6883D',
-        icon: 'icon-book',
-      },
-      {
-        id: 'teachernums',
-        title: '老师数量',
-        num: 20,
-        backgroundColor: '#41AFEE',
-        icon: 'icon-people',
-      },
-      {
-        id: 'allmoneys',
-        title: '总金额',
-        num: 3500,
-        backgroundColor: '#7E4EEC',
-        icon: 'icon-money',
-      },
-    ];
+
+    const { loading, selectedRowKeys } = this.state
+
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    }
 
     return (
       <GridContent>
         <Suspense fallback={<PageLoading />}>
           {/* 统计 */}
-          <IntroCommon defaultNums={defaultNums} />
+          <IntroCommon />
 
           {/* 新增按钮 */}
-          <Button className={styles.addbtn} onClick={() => this.addTeacher()}>
-            +新增老师
-          </Button>
+          <div className={styles.btngroup}>
+            <Button className={styles.addbtn} onClick={() => this.addTeacher()} style={{marginRight:'15px'}}>
+              +新增老师
+            </Button>
+            <Button className={styles.addbtn}>
+              开放时间
+            </Button>
+          </div>
+          
 
           {/* 表格 */}
-          <Table columns={this.state.columns} dataSource={this.state.data} />
+          <Table rowSelection={rowSelection} columns={this.state.columns} dataSource={this.state.data} loading={loading} />
         </Suspense>
       </GridContent>
     );
