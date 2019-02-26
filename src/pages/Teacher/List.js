@@ -170,8 +170,8 @@ class TeacherList extends Component {
             <Button className={styles.addbtn} onClick={() => this.addTeacher()} style={{marginRight:'15px'}}>
               +新增老师
             </Button>
-            <Button className={styles.addbtn}>
-              开放时间
+            <Button className={styles.addbtn} onClick={() => this.arrange()}>
+              批量开放时间
             </Button>
           </div>
           
