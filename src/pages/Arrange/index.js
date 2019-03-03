@@ -8,47 +8,135 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import IntroCommon from '@/components/IntroCommon';
 import styles from './index.less';
 import moment from 'moment';
+import { deflateRawSync } from 'zlib';
+import ApiClient from '@/utils/api';
 
 @connect()
 class ArrangeIndex extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      timelist:[
-        {
-          id:1,
-          starttime:'2019-2-26 9:00',
-          endtime:'2019-2-27 9:00'
-        },
-        {
-          id:2,
-          starttime:'2019-2-26 9:00',
-          endtime:'2019-2-27 9:00'
-        },
-        {
-          id:3,
-          starttime:'2019-2-26 9:00',
-          endtime:'2019-2-27 9:00'
-        }
-      ]
+      timelist:[]
     };
   }
 
   componentWillMount = () => {
-    console.log(this.props);
-  };
+    /**
+     * 获取传来的老师id
+     */
 
-  onPanelChange = (value, mode) => {
-    console.log(value, mode);
-  };
+    let ids = this.props.location.state.id
+    ids = JSON.parse(ids)
+    this.setState({
+      ids
+    })
+    this.getTime()
+  }
+
+  /**
+   * 获取初始时间
+   */
+  getTime = () => {
+    let date = new Date()
+    let year = date.getFullYear()
+    let month = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : (date.getMonth() + 1)
+    let day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+    let defaultDay = year + '-' + month + '-' + day
+    let hourTime = date.getHours()
+    let minutesTime = date.getMinutes()
+    this.setState({
+      starth:hourTime,
+      endh:hourTime,
+      startm:minutesTime,
+      endm:minutesTime,
+      defaultDay
+    })
+  }
+
+  /**
+   * 日历得改变
+   */
+  onPanelChange = (value) => {
+    let date = value.format('YYYY-MM-DD')
+    this.setState({
+      defaultDay:date
+    })
+  }
+
+  /**
+   * 开始时间结束时间得计算
+   */
+  onTimeChange = (time,type) => {
+    let _this = this
+    let timeValue
+    if(type == 'starth'){
+      timeValue = time.format('HH')
+      _this.setState({
+        starth:timeValue
+      })
+    }else if(type == 'startm'){
+      timeValue = time.format('mm')
+      _this.setState({
+        startm:timeValue
+      })
+    }else if(type == 'endh'){
+      timeValue = time.format('HH')
+      _this.setState({
+        endh:timeValue
+      })
+    }else if(type == 'endm'){
+      timeValue = time.format('mm')
+      _this.setState({
+        endm:timeValue
+      })
+    }
+  }
+
+  /**
+   * 添加日历
+   */
+  addCalender = () => {
+    let { defaultDay,starth,startm,endh,endm,timelist } = this.state
+    timelist.push({
+      start:defaultDay + ' ' + starth+':'+startm,
+      end:defaultDay + ' ' + endh+':'+endm
+    })
+
+    this.setState({
+      timelist
+    })
+  }
+
+  /**
+   * 删除日历
+   */
+  deleteCalender = id => {
+    let { timelist } = this.state
+    timelist.splice(id,1)
+    this.setState({
+      timelist
+    })
+  }
+
+  /**
+   * 确认提交
+   */
+  submit = () => {
+    let { ids,timelist } = this.state
+    ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherTime&do=teacher_times', {
+      tid:ids,
+      time:timelist
+    }).then(res => {
+      console.log(res)
+    });
+  }
 
   render() {
     const { match, children, location } = this.props;
+    let { timelist,starth,startm,endh,endm } = this.state
 
-    let { timelist } = this.state
-
-    const minutes = 'm';
-    const second = 'ss';
+    const hour = 'HH';
+    const minutes = 'mm';
 
     return (
       <GridContent>
@@ -70,7 +158,7 @@ class ArrangeIndex extends Component {
                 <Calendar
                   style={{ width: '100%' }}
                   fullscreen={false}
-                  onPanelChange={() => this.onPanelChange}
+                  onSelect={this.onPanelChange}
                 />
               </div>
             </Col>
@@ -80,30 +168,30 @@ class ArrangeIndex extends Component {
               <div className={styles.timemain}>
                 <Row className={styles.timegroup}>
                   <Col span={10} className={styles.timeitem}>
-                    <TimePicker defaultValue={moment('9', minutes)} format={minutes} />
+                    <TimePicker defaultValue={moment(starth, hour)} format={hour} onChange={time => this.onTimeChange(time,'starth')}/>
                     <span>:</span>
-                    <TimePicker defaultValue={moment('12', second)} format={second} />
+                    <TimePicker defaultValue={moment(startm, minutes)} format={minutes} onChange={time => this.onTimeChange(time,'startm')}/>
                   </Col>
                   <Col span={4} className={styles.timecenter}>
                     <div className={styles.itemline} />
                   </Col>
                   <Col span={10} className={styles.timeitem}>
-                    <TimePicker defaultValue={moment('9', minutes)} format={minutes} />
+                    <TimePicker defaultValue={moment(endh, hour)} format={hour} onChange={time => this.onTimeChange(time,'endh')}/>
                     <span>:</span>
-                    <TimePicker defaultValue={moment('12', second)} format={second} />
+                    <TimePicker defaultValue={moment(endm, minutes)} format={minutes} onChange={time => this.onTimeChange(time,'endm')}/>
                   </Col>
                 </Row>
               </div>
 
               {/* 时间的列表 */}
-              <div className={styles.timemain}>
+              <div className={styles.timemain} style={{display:(timelist.length > 0 ? 'block' : 'none')}}>
                 <div className={styles.box}>
                   {timelist ? timelist.map((v,i) => (
-                    <div className={styles.boxGroup}>
-                      <div className={styles.boxItemFirst}>{v.starttime}</div>
-                      <div className={styles.boxItemFirst}>{v.endtime}</div>
+                    <div className={styles.boxGroup} key={i}>
+                      <div className={styles.boxItemFirst}>{v.start}</div>
+                      <div className={styles.boxItemFirst}>{v.end}</div>
                       <div className={styles.boxItemBtn}>
-                        <Button type="danger" size="small">删除</Button>
+                        <Button type="danger" size="small" onClick={() => this.deleteCalender(i)}>删除</Button>
                       </div>
                     </div>
                   )) : null}
@@ -114,7 +202,7 @@ class ArrangeIndex extends Component {
               <div className={styles.timemainSpe}>
                 <div className={styles.boxSpe}>
                   <div className={styles.boxGroupSpe}>
-                    <Button type="primary" size="small">添加日程+</Button>
+                    <Button type="primary" size="small" onClick={() => this.addCalender()}>添加日程+</Button>
                   </div>
                 </div>
               </div>
@@ -123,8 +211,8 @@ class ArrangeIndex extends Component {
               <div className={styles.timemainSpe}>
                 <div className={styles.boxSpe}>
                   <div className={styles.btnGroup}>
-                    <Button className={styles.btnRight} type="primary">确认</Button>
-                    <Button>取消</Button>
+                    <Button className={styles.btnRight} type="primary" onClick={()=>this.submit()}>确认</Button>
+                    <Button onClick={() => this.cancel()}>取消</Button>
                   </div>
                 </div>
               </div>

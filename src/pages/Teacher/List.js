@@ -40,8 +40,9 @@ class TeacherList extends Component {
           width: 250,
           align: 'center',
           render:(text,record) => {
+            let id = [record.id]
             return (
-              <Button type="primary" onClick={() => this.arrange(record.id)}>添加开放时间</Button>
+              <Button type="primary" onClick={() => this.arrange(id)}>添加开放时间</Button>
             )
           }
         },
@@ -103,7 +104,7 @@ class TeacherList extends Component {
   };
 
   arrange = id => {
-    let item = [1,2,3]
+    let item = id
     const { history } = this.props
     history.push({
       pathname:'arrange/',
@@ -145,8 +146,16 @@ class TeacherList extends Component {
   };
 
   onSelectChange = (selectedRowKeys) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
-    this.setState({ selectedRowKeys });
+    let _this = this
+    let ids = []
+    selectedRowKeys.map((v,i) => {
+      ids.push(_this.state.data[v].id)
+    })
+    this.setState({
+      ids,
+      selectedRowKeys 
+    });
+
   }
 
   render() {
@@ -170,7 +179,7 @@ class TeacherList extends Component {
             <Button className={styles.addbtn} onClick={() => this.addTeacher()} style={{marginRight:'15px'}}>
               +新增老师
             </Button>
-            <Button className={styles.addbtn} onClick={() => this.arrange()}>
+            <Button className={styles.addbtn} onClick={() => this.arrange(this.state.ids)}>
               批量开放时间
             </Button>
           </div>
