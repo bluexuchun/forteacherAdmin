@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
-import { Input, Button, Row, Col, Calendar, TimePicker } from 'antd';
+import { Input, Button, Row, Col, Calendar, TimePicker,message } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
@@ -123,12 +123,29 @@ class ArrangeIndex extends Component {
    */
   submit = () => {
     let { ids,timelist } = this.state
+    let _this = this
     ApiClient.post('/api.php?entry=sys&c=teacher&a=teacherTime&do=teacher_times', {
       tid:ids,
       time:timelist
     }).then(res => {
-      console.log(res)
+      let result = res.data
+      if(result.status == 1){
+        message.success(result.message);
+        setTimeout(() => {
+          _this.props.history.push('/teacher_list');
+        }, 1000);
+      }else{
+        message.success(result.message);
+      }
     });
+  }
+
+  /**
+   * 取消按钮
+   */
+  cancel = () => {
+    let _this = this
+    _this.props.history.push('/teacher_list')
   }
 
   render() {

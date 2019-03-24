@@ -1,7 +1,7 @@
 import React, { Component, Suspense } from 'react';
 import router from 'umi/router';
 import { connect } from 'dva';
-import { Input, Button, Row, Col, Avatar, Form, Upload, message } from 'antd';
+import { Input, Button, Row, Col, Avatar, Form, Upload, message,Radio } from 'antd';
 import PageLoading from '@/components/PageLoading';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
@@ -11,6 +11,7 @@ import uploadImg from '@/utils/upload';
 import ApiClient from '@/utils/api';
 
 const FormItem = Form.Item;
+const RadioGroup = Radio.Group
 const { TextArea } = Input;
 @connect()
 class TeacherEdit extends Component {
@@ -19,6 +20,7 @@ class TeacherEdit extends Component {
     this.state = {
       imageUrl: '',
       addUrl: '/api.php?entry=sys&c=teacher&a=teacher&do=teacher_add',
+      sex:1
     };
   }
 
@@ -39,7 +41,7 @@ class TeacherEdit extends Component {
         }
       );
     }
-  };
+  }
 
   // 保存信息
   submit = e => {
@@ -61,7 +63,6 @@ class TeacherEdit extends Component {
             if (result.status == 1) {
               message.success(result.message);
               setTimeout(() => {
-                console.log('123');
                 _this.props.history.push('/teacher_list');
               }, 1000);
             } else {
@@ -71,7 +72,7 @@ class TeacherEdit extends Component {
         }
       }
     });
-  };
+  }
 
   handleChange = info => {
     let _this = this;
@@ -91,7 +92,13 @@ class TeacherEdit extends Component {
         message.error(result.message);
       }
     }
-  };
+  }
+
+  onChangeSex = (e) => {
+    this.setState({
+      sex: e.target.value,
+    });
+  }
 
   render() {
     const { match, children, location } = this.props;
@@ -173,6 +180,17 @@ class TeacherEdit extends Component {
                     })(<Input placeholder="请输入昵称" />)}
                   </FormItem>
                 ) : null}
+                <FormItem {...formItemSmallLayout} label="性别：">
+                  {getFieldDecorator('sex', {
+                    rules: [{ required: false, message: '请选择性别!' }],
+                    initialValue: this.state.sex,
+                  })(
+                    <RadioGroup onChange={this.onChangeSex}>
+                      <Radio value={1}>男</Radio>
+                      <Radio value={2}>女</Radio>
+                    </RadioGroup>
+                  )}
+                </FormItem>
                 <FormItem {...formItemSmallLayout} label="年龄：">
                   {getFieldDecorator('age', {
                     rules: [{ required: true, message: '请输入教师年龄姓名!' }],
@@ -201,10 +219,10 @@ class TeacherEdit extends Component {
               <div className={styles.tabTitle}>联系方式</div>
               <Form onSubmit={this.submit}>
                 <FormItem {...formItemSmallLayout} label="手机号：">
-                  {getFieldDecorator('telephone', {
+                  {getFieldDecorator('teacherAccount', {
                     rules: [{ required: true, message: '请输入教师手机号!' }],
                     initialValue: this.state.teacherAccount,
-                  })(<Input placeholder="请输入教师手机号" />)}
+                  })(<Input placeholder="请输入教师手机号" disabled={this.props.match.params.id == 0 ? false : true} />)}
                 </FormItem>
                 {this.props.match.params.id == 0 ? (
                   <FormItem {...formItemSmallLayout} label="密码：">
